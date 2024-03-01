@@ -1,8 +1,9 @@
 let mysqlconfig = {
         port:3306,
-        host:"127.0.0.1",
+        host:"47.108.136.139",
         user:"root",
-        password:"980306",
-        database:"dnd"   
+        password:"12345678",
+        database: "dnd",
+        useConnectionPooling: true,
 }
 module.exports = mysqlconfig

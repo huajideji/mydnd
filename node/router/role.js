@@ -26,35 +26,45 @@ router.post('/addRole', async (req, res) => {
             return '\\' + (dict[$1] || $1);
         });
     }
-    var sql = `insert into role_list (role_name,main_atrribute,skill) values('${toLiteral(req.query.role_name)}','${toLiteral(req.query.main_atrribute)}','${toLiteral(req.query.skill)}')`
-    console.log(sql)
-    con.query(sql,(err, result) => {
-        if (err) {
-          res.json({
-                code: 500,
-                msg: '读取数据库失败',
-                data:err.message
-            })  
-        } else {
-            res.json({
-                code: 200,
-                msg: 'sucess',
-                data:'添加成功'
-            })
-        }
-    })
+    let searchData = {
+        role_name: req.query.role_name,
+        strength: req.query.strength ? req.query.strength : '',
+        agility: req.query.agility ? req.query.agility : '',
+        intelligence: req.query.intelligence ? req.query.intelligence : '',
+        perception: req.query.perception ? req.query.perception : '',
+        constitution: req.query.agility ? req.query.constitution : '',
+        charm: req.query.agility ? req.query.charm : '',
+        level:req.query.level?req.query.level:''
+    }
+    let flag = false
+    if (!searchData.role_name) {
+        res.json({
+            code: 200,
+            msg: '角色名不能为空',
+        })  
+    } else {
+        flag = true
+    }
+    if (flag) {
+        var sql = `insert into role_list (role_name,strength,agility,intelligence,perception,constitution,charm,level) 
+        values('${searchData.role_name}',${parseInt(searchData.strength)},${searchData.agility},${searchData.intelligence},${searchData.perception},${searchData.constitution},${searchData.charm},${searchData.level})`
+        con.query(sql, (err, result) => {
+            if (err) {
+              res.json({
+                    code: 500,
+                    msg: '读取数据库失败',
+                    data:err.message
+                })  
+            } else {
+                res.json({
+                    code: 200,
+                    msg: 'sucess',
+                    data:'添加成功'
+                })
+            }
+        })
+    }
+   
 })
-
-// pool.getConnection((err, connection) => {
-//     let jsondata2 = '{"name":"花鸡3"}'
-//     var sql = `insert into test_list (jsondata) values('${jsondata2}')`
-//     connection.query(sql,(err, result) => {
-//     if (err) {
-//       console.log(err.message)
-//     } else {
-//        console.log(result)
-//     }
-// })
-// })
 
 module.exports = router
